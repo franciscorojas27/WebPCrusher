@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -40,8 +41,8 @@ func main() {
 		if err != nil {
 			return err
 		}
-		ext := filepath.Ext(path)
-		if ext == ".jpg" || ext == ".png" {
+		ext := strings.ToLower(filepath.Ext(path))
+		if ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" {
 			wg.Add(1)
 			jobs <- Job{Path: path, Ext: ext, DestPath: webpPath}
 		}
