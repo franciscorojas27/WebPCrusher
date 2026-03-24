@@ -36,14 +36,20 @@ func main() {
 		libs.CreateWebpDir(webpPath)
 	}
 
-	filepath.Walk(*filePathClean, func(path string, info os.FileInfo, err error) error {
+	if err := filepath.Walk(*filePathClean, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		ext := filepath.Ext(path)
 		if ext == ".jpg" || ext == ".png" {
 			wg.Add(1)
 			jobs <- Job{Path: path, Ext: ext, DestPath: webpPath}
 		}
 		return nil
-	})
+	}); err != nil {
+		fmt.Printf("\033[31m"+"Error walking the input path: %v\033[0m\n", err)
+		os.Exit(1)
+	}
 	close(jobs)
 	wg.Wait()
 }

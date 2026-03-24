@@ -39,6 +39,7 @@ func truncate(s string, max int) string {
 var headerOnce sync.Once
 
 func worker(id int, channel <-chan Job, wg *sync.WaitGroup) {
+	headerOnce.Do(PrintHeader)
 	for job := range channel {
 		func(j Job) {
 			defer wg.Done()
