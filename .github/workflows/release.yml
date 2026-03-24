@@ -29,17 +29,16 @@ jobs:
             echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create GitHub release (using gh CLI)
+        id: create_release_cli
+        shell: powershell
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get_tag.outputs.tag }}
-          release_name: Release ${{ steps.get_tag.outputs.tag }}
-          body: "Release created by workflow for tag ${{ steps.get_tag.outputs.tag }}"
-          draft: false
-          prerelease: false
+          TAG: ${{ steps.get_tag.outputs.tag }}
+        run: |
+          choco install gh -y
+          Write-Output $env:GITHUB_TOKEN | gh auth login --with-token
+          gh release create $env:TAG --title "Release $env:TAG" --notes "Release created by workflow for tag $env:TAG"
 
       - name: Setup MSYS2 (mingw64) and install dependencies
         uses: msys2/setup-msys2@v2
@@ -57,12 +56,11 @@ jobs:
           export CC="x86_64-w64-mingw32-gcc"
           GOOS=windows GOARCH=amd64 CGO_ENABLED=1 go build -ldflags "-s -w" -o WebpCrusher.exe
 
-      - name: Upload Windows exe to release
-        uses: actions/upload-release-asset@v1
+      - name: Upload Windows exe to release (using gh)
+        shell: powershell
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WebpCrusher.exe
-          asset_name: WebpCrusher.exe
-          asset_content_type: application/octet-stream
+          TAG: ${{ steps.get_tag.outputs.tag }}
+        run: |
+          Write-Output $env:GITHUB_TOKEN | gh auth login --with-token
+          gh release upload $env:TAG ./WebpCrusher.exe --clobber
