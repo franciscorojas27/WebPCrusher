@@ -1,7 +1,7 @@
-# WebP-Crusher
+# Webp Crusher
 
 Descripción
-- Herramienta de línea de comandos en Go para convertir imágenes (.jpg, .png) a WebP y guardar las salidas en una carpeta `webp` dentro del directorio de entrada.
+- Herramienta de línea de comandos en Go para convertir imágenes (.jpg, .png) a Webp y guardar las salidas en una carpeta `webp` dentro del directorio de entrada.
 
 Requisitos
 - Go 1.18 o superior.
@@ -10,15 +10,23 @@ Instalación
 1. Clona el repositorio o descarga los archivos al directorio de trabajo.
 2. En el directorio raíz del proyecto, compila:
 
+Windows (executable):
+
 ```powershell
-go build -o WebP-Crusher
+go build -o WebpCrusher.exe
+```
+
+Linux/macOS (binary name will be `WebpCrusher`):
+
+```bash
+go build -o WebpCrusher
 ```
 
 Uso
 - Ejecuta el binario indicando el directorio que contiene las imágenes con la bandera `-p`.
 
 ```powershell
-.\WebP-Crusher -p "C:\ruta\a\imagenes"
+.\WebpCrusher -p "C:\ruta\a\imagenes"
 ```
 
 Comportamiento
@@ -39,7 +47,7 @@ copy C:\ruta\a\algunas\imagenes\*.jpg C:\temp\imgs\
 2. Ejecutar la conversión:
 
 ```powershell
-.\WebP-Crusher -p C:\temp\imgs
+.\WebpCrusher -p C:\temp\imgs
 ```
 3. Revisar los archivos convertidos en `C:\temp\imgs\webp`.
 
