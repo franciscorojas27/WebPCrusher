@@ -11,16 +11,17 @@ import (
 )
 
 func main() {
-	const numWorkers = 20
+	
+	filePathClean := flag.String("p", "", `Path to input images directory`)
+	numWorkers := flag.Int("w", 20, `Number of worker goroutines`)
+	flag.Parse()
+	
 	jobs := make(chan Job, 100)
 	var wg sync.WaitGroup
 
-	for i := 0; i < numWorkers; i++ {
+	for i := 0; i < *numWorkers; i++ {
 		go worker(i, jobs, &wg)
 	}
-
-	filePathClean := flag.String("p", "", `Path to input images directory`)
-	flag.Parse()
 
 	if *filePathClean == "" {
 		fmt.Printf("\033[31m" + "Please provide a valid path to the input images directory using the -p flag.\033[0m\n")
