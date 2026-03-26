@@ -82,9 +82,8 @@ func main() {
 			return nil
 		}
 
-		// allowed source extensions (including jfif)
 		if ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif" || ext == ".jfif" {
-			base := strings.TrimSuffix(filepath.Base(path), ext)
+			base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 			destFile := filepath.Join(webpPath, base+".webp")
 			if _, statErr := os.Stat(destFile); os.IsNotExist(statErr) {
 				wg.Add(1)
